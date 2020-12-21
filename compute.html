@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<div id="demo">
-			
+			<input v-model="a" width="15"/>+<input v-model="a" width="15"/>={{a+b}}
 		</div>
 	</body>
 </html>
@@ -16,7 +16,8 @@
 	new Vue({
 		el:"#demo",
 		data:{
-			
+			a:1,
+			b:2
 		}
 	})
 </script>
