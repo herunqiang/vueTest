@@ -3,11 +3,30 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.5.20/vue.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="js/axios.js"></script>
+		<style>
+			.active{
+				color: green;
+			}
+		</style>
 	</head>
 	<body>
-		<div id="demo">
+		<div id="demo" ><!-- v-on:click="test(1)" -->
 			<input v-model.number="a" width="15"/>+<input v-model.number="b" width="15"/>={{a+b}}
+			<ul>
+				<li v-for="(item,index) in list" v-bind:class="{'active':index==curIndex}"  v-on:click="setCurIndex(index)"> {{item}}({{index}})</li>
+			</ul>
+			<button type="button" v-on:click="addData">添加计算结果</button>
+			<button type="button" v-on:click="test(2)">冒泡</button>
+			<h3>修饰符</h3>
+			<button type="button" v-on:click.stop="test(2)">阻止冒泡</button><br />
+			<label for="enter">enter按键修饰符</label>
+			<input id="enter" type="text" v-model="str" v-on:keyup.enter="entry" v-on:keyup.esc="clear">
+			<div v-bind:style="{background:color,width:width+'px'}">样式绑定</div>
+			<input type="color" v-model="color" placeholder="选择标题颜色"/>
+			<input type="range" v-model="width" min="1" max="500"/>
+			<button type="button" v-on:click.stop="send()">请求数据</button><br />
 		</div>
 	</body>
 </html>
@@ -17,7 +36,38 @@
 		el:"#demo",
 		data:{
 			a:1,
-			b:2
+			b:2,
+			list:["霸霸","爸爸","father"],
+			curIndex:0,
+			str:"",
+			color:"red",
+			width:10
+		},
+		methods:{
+			addData:function(){//向list里面添加结果
+				var sum = this.a+this.b;
+				this.list.push(sum);
+			},
+			test:function(n){
+				alert(n);
+			},
+			entry:function(){
+				alert(this.str);
+			},
+			clear:function(){
+				this.str = "";
+			},
+			setCurIndex:function(i){
+				this.curIndex = i;
+			},
+			send:function(){
+			                    axios({
+			                       method:'get',
+			                        url:'https://10.1.126.28/yuexiu/buscomp/btBankType.do?method=reqBtBankTypeData'
+			                    }).then(function(res){
+			                        console.log(res.data.name);
+			                    });
+			}
 		}
 	})
 </script>

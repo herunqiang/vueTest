@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+		<style>
+			.success{
+				color:#93a8bc;
+				text-decoration: line-through;
+			}
+		</style>
+	</head>
+	<body>
+		<h2> 备忘录</h2>
+		<div id="rmk" >
+			<input type="text" v-model="input" v-on:keyup.enter="add" v-on:keyup.esc="clearn" placeholder="enter录入" >
+			<div>
+				<div v-for="(item,index) in list" v-bind:class="{'success':item.isChecked}" v-if="displayType==1?true:(displayType==2&&item.isChecked==true?true:(displayType==3&&item.isChecked==false?true:false))" >
+					<input type="checkbox" v-model="item.isChecked" v-on:change="sumSuccess" >{{index+1}}.{{item.name}}
+				</div>
+				<div>
+					总计：{{list.length}}已完成：{{successCount}}&nbsp;&nbsp;&nbsp;&nbsp;
+					<label for="all">显示全部:</label><input type="radio" id = "all" v-on:change="displayData(1)" name="display" />&nbsp;&nbsp;
+					<label for="Y">已完成:</label><input type="radio" id = "Y" v-on:change="displayData(2)" name="display" />&nbsp;&nbsp;
+					<label for="N">未完成:</label><input type="radio" id = "N" v-on:change="displayData(3)" name="display" />&nbsp;&nbsp;
+					
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>
+
+<script>
+	var vm = new Vue({
+		el:"#rmk",
+		data:{
+			input:"",
+			successCount:0,
+			displayType:1,
+			
+			list:[]
+		},
+		methods:{
+			add:function (){
+				var obj = {name:this.input ,isChecked:false};
+				this.list.push(obj);
+				this.input = "";
+			},
+			clearn:function (){
+				
+				this.input = "";
+			},
+			sumSuccess:function (){
+				var list = vm.list;
+				var count  = 0;
+				for(var i = 0 ; i<list.length;i++){
+					var obj = list[i];
+					if(obj.isChecked){
+						count = count +1;
+					}
+				}
+				vm.successCount = count;
+			},
+			displayData:function(type){
+				this.displayType= type;
+			}
+		}
+	});
+	
+</script>
