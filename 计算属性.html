@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算属性demo</title>
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+    <div id = "box">
+        {{getGradeDtl}}
+        <input v-model="grade">
+    </div>
+</body>
+</html>
+<script>
+    new Vue({
+        el:"#box",
+        data:{
+            grade:0
+        },
+        computed:{
+            getGradeDtl(){
+                if (this.grade > 100 || this.grade < 0) {
+                    return "不要乱来哈,无中生有的分数";
+                }
+                if(this.grade >=90){
+                    return "优秀的一笔";
+                }else if (this.grade >= 60) {
+                    return "只能说还阔以";
+                }else{
+                    return "你这个分数只配去吃泡面（不争气）";
+                }
+            }
+        }
+
+    })
+
+</script>

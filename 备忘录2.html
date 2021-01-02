@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+		<style>
+			.success{
+				color:#93a8bc;
+				text-decoration: line-through;
+			}
+		</style>
+	</head>
+	<body>
+		<h2> 备忘录</h2>
+		<div id="rmk" >
+			<input type="text" v-model="input" v-on:keyup.enter="add" v-on:keyup.esc="clearn" placeholder="enter录入" >
+			<input type="checkbox" v-model="select">全选/全不选
+			<div>
+				<div v-for="(item,index) in list" v-bind:class="{'success':item.isChecked}" v-if="displayType==1?true:(displayType==2&&item.isChecked==true?true:(displayType==3&&item.isChecked==false?true:false))" >
+					<input type="checkbox" v-model="item.isChecked" v-bind:id="'bb_'+index"  ><label v-bind:for="'bb_'+index">{{index+1}}.{{item.name}}</label>
+				</div>
+				<div>
+					总计：{{list.length}}已完成：{{getSuccessCount}}&nbsp;&nbsp;&nbsp;&nbsp;
+					<label for="all">显示全部:</label><input type="radio" id = "all" v-on:change="displayData(1)" name="display" />&nbsp;&nbsp;
+					<label for="Y">已完成:</label><input type="radio" id = "Y" v-on:change="displayData(2)" name="display" />&nbsp;&nbsp;
+					<label for="N">未完成:</label><input type="radio" id = "N" v-on:change="displayData(3)" name="display" />&nbsp;&nbsp;
+					
+				</div>
+			</div>
+
+		</div>
+		
+	</body>
+</html>
+
+<script>
+	var vm = new Vue({
+		el:"#rmk",
+		data:{
+			input: "",
+			displayType:1,
+			list:[{name: "asfjaifji" ,isChecked:false},
+				{name: "asfjaifji" ,isChecked:false},
+				{name: "asfjaifji" ,isChecked:false}]
+		},
+		computed:{
+			select: {
+				get() {
+					return this.list.length == this.getSuccessCount;
+				},
+				set(v) {
+					console.log(this.list.length)
+					this.list.forEach((item)=>{
+						item.isChecked = v;
+					})
+				}
+			},
+			getSuccessCount(){
+				return this.list.filter((item)=>{
+					return item.isChecked;
+				}).length;
+			}
+		},
+		methods:{
+			add:function (){
+				this.list.push({name:this.input ,isChecked:false});
+				this.input = "";
+			},
+			clearn:function (){
+				this.input = "";
+			},
+			displayData:function(type){
+				this.displayType= type;
+			}
+		}
+	});
+	
+</script>
