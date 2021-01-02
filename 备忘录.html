@@ -15,6 +15,7 @@
 		<h2> 备忘录</h2>
 		<div id="rmk" >
 			<input type="text" v-model="input" v-on:keyup.enter="add" v-on:keyup.esc="clearn" placeholder="enter录入" >
+			<input type="checkbox" v-model="sellect">
 			<div>
 				<div v-for="(item,index) in list" v-bind:class="{'success':item.isChecked}" v-if="displayType==1?true:(displayType==2&&item.isChecked==true?true:(displayType==3&&item.isChecked==false?true:false))" >
 					<input type="checkbox" v-model="item.isChecked" v-on:change="sumSuccess" >{{index+1}}.{{item.name}}
@@ -42,6 +43,13 @@
 			
 			list:[]
 		},
+		computed:{
+			sellect:{
+				get(){
+					return this.list.length ==this.successCount;
+				}
+			}
+		},
 		methods:{
 			add:function (){
 				var obj = {name:this.input ,isChecked:false};
@@ -55,12 +63,15 @@
 			sumSuccess:function (){
 				var list = vm.list;
 				var count  = 0;
-				for(var i = 0 ; i<list.length;i++){
-					var obj = list[i];
-					if(obj.isChecked){
-						count = count +1;
-					}
-				}
+				// for(var i = 0 ; i<list.length;i++){
+				// 	var obj = list[i];
+				// 	if(obj.isChecked){
+				// 		count = count +1;
+				// 	}
+				// }
+				count = list.filter((item)=>{
+					return item.isChecked;
+				}).length;
 				vm.successCount = count;
 			},
 			displayData:function(type){
