@@ -8,8 +8,10 @@
 
 <body>
     <div id = "box">
-        {{getGradeDtl}}
-        <input v-model="grade">
+        语法一{{getGradeDtl}}
+        <input v-model="grade"><br>
+        语法2：<input v-model.number="gradeDtl" >
+
     </div>
 </body>
 </html>
@@ -20,6 +22,7 @@
             grade:0
         },
         computed:{
+            //语法一：等同于语法二只有getter
             getGradeDtl(){
                 if (this.grade > 100 || this.grade < 0) {
                     return "不要乱来哈,无中生有的分数";
@@ -31,8 +34,34 @@
                 }else{
                     return "你这个分数只配去吃泡面（不争气）";
                 }
+            },
+            //语法二
+            gradeDtl:{
+                set(v){
+                    if (!this.isNumber(v)) {
+                        alert("只能输入数字");
+                        return;
+                    } else {
+                        this.grade=v;
+                    }
+                },
+                get() {
+                   return this.grade;
+                }
+            }
+
+        },
+        methods:{
+            isNumber:function (v) {
+                var numReg = /^[0-9]*$/
+                var numRe = new RegExp(numReg)
+                if (!numRe.test(v)) {
+                    return false;
+                }
+                return true;
             }
         }
+
 
     })
 
