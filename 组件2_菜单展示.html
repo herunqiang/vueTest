@@ -6,7 +6,24 @@
     <script src="js/vue.js"></script>
 </head>
 <body>
+
+
     <div id="box">
+        <div>
+
+            <input v-model="title" placeholder="标题" ><br>
+            <input v-model="input" v-on:keyup.enter="add">
+            <button v-on:click="push">提交</button>
+            <div style="background-color: #93a8bc">
+                <h3>待提交数据</h3>
+                标题：<font color="#ff9c47">{{title}}</font>
+                <ul>
+                    <li v-for="(item,index) in contents">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+
         <div v-for="(item,index) in list">
             <item v-bind:item="item" :index="index" :toggle="toggle"></item>
         </div>
@@ -32,6 +49,9 @@
     new Vue({
         el:"#box",
         data: {
+            title:"",
+            input: "",
+            contents:[],
             list:[
                 {
                     title:"我的视频",
@@ -48,10 +68,32 @@
         components: {
             item
         },
-        methods:{
+        methods: {
             toggle: function (index) {
                 this.list[index].flag = !this.list[index].flag;
+            },
+            clear: function () {
+                this.input = "";
+                this.contents = [];
+                this.obj = null;
+                this.title = "";
+            },
+            add: function () {
+                this.contents.push(this.input);
+                this.input = "";
+
+            },
+            push:function (){
+                var dtl = {
+                    title:this.title,
+                    flag :true,
+                    contents: this.contents
+                }
+                this.list.push(dtl);
+                this.clear();
+
             }
+
         }
     })
 </script>
