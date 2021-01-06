@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id = "box">
+        <input type="text" v-model="name" >
+        <contents :name="name" :a="a" v-on:aaresult="receiveData($event,1)"></contents>
+        <contents :name="name" :a="a" v-on:aaresult="receiveData($event,2)"></contents>
+
+    </div>
+
+</body>
+</html>
+<script>
+    /**
+     * 1.子组件发送
+     * 2. <组件  v-on:事件="事件处理函数" /> 注：$event显式指定子组件数据
+     * 3.父组件处理
+     */
+    var contents = {
+        props: {
+            name:{
+                type:String,
+                validator: function (value) {
+                    // 这个值必须匹配下列字符串中的一个
+                    return ['HRQ', 'WYF'].indexOf(value) !== -1
+                }
+            },
+            a:{type:Number,required:true}
+            },
+        data() {
+            return {
+                tempName:this.name,
+                aa:this.a
+            }
+        },
+        created() {
+            this.aa = this.a;
+        },
+        methods: {
+            inc:function (){
+                this.aa +=1;
+            },
+            send: function () {
+                this.$emit("aaresult", this.aa);
+            }
+        },
+        template: `
+            <div>
+                my name is {{tempName}}
+                <br>
+                {{aa}} <button @click="inc">+</button>
+                <button @click="send">返回父组件</button>
+            </div>`
+
+
+
+    };
+    new Vue({
+        el: "#box",
+        data:{
+            name:"WYF",
+            a:1
+        },
+        components:{
+            contents
+        },
+        methods: {
+            receiveData:function (data,op) {
+                if (op == 1) {
+                    alert("处理方式1：" + data);
+                }else if(op == 2){
+                    alert("处理方式er：" + data);
+                }
+            }
+        }
+    })
+</script>
