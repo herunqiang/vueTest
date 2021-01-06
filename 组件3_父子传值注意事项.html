@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id = "box">
+        <input type="text" v-model="name" >
+        <contents :name="name" :a="a"></contents>
+        <contents :name="name" :a="a"></contents>
+        <contents :name="name" :a="a"></contents>
+        <contents :name="name" :a="a"></contents>
+    </div>
+
+</body>
+</html>
+<script>
+    /**
+     * props验证
+     *
+     *
+     */
+    var contents = {
+        props: {
+            name:{
+                type:String,
+                validator: function (value) {
+                    // 这个值必须匹配下列字符串中的一个
+                    return ['HRQ', 'WYF'].indexOf(value) !== -1
+                }
+            },
+            a:{type:Number,required:true}
+            },
+        data() {
+            return {
+                tempName:this.name,
+                aa:this.a
+            }
+        },
+        created() {
+            this.aa = this.a;
+        },
+        methods: {
+            inc:function (){
+                this.aa +=1;
+            }
+        },
+        template: `
+            <div>
+                my name is {{tempName}}
+                <br>
+                {{aa}} <button @click="inc">+</button>
+            </div>`
+
+
+
+    };
+    new Vue({
+        el: "#box",
+        data:{
+            name:"WYF",
+            a:1
+        },
+        components:{
+            contents
+        }
+    })
+</script>
