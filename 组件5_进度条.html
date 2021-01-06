@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件的应用</title>
+    <script src="js/vue.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .progress{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id = "box">
+        <input  v-model.number="inputValue" placeholder="请输入完成进度">
+        <my-progress v-for="(item,index) in componentList" :key="index" :id="index" :value="item.jindu" :speed="item.speed" :componentname="item.name+(index+1)" @push-msg="setMsg"></my-progress>
+
+        <h4>控制台消息</h4>
+        <span v-html="info"></span>
+        <div style="background-color: #a7c4c8">
+            <div v-for="(item,index) in consoloMsgList"> {{item}}</div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    var myProgress = {
+        props:{
+            id:Number,
+            componentname: String,
+            speed:{
+                type: Number,
+                required: true
+            },
+            value: {
+                type: Number,
+                required: true,
+                validator: function (v) {
+                    if (v > 100 || v < 0) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        },
+        data() {
+            return {
+                componentValue: this.value
+            }
+        },
+        created() {
+            var start = new Date().getTime();
+            var timer = setInterval(() => {
+
+                this.componentValue++;
+                if (this.componentValue == 100) {
+                    clearInterval(timer);
+                    this.returnMsg(this.componentname + "已完成",new Date().getTime()-start);
+
+                }
+            }, this.speed);
+
+        },
+        template:`
+                    <div class="progress">
+                        <div class="progress-bar" v-bind:style="{width:componentValue+'%'}">{{componentValue}}</div>
+                    </div>
+        `,
+        methods: {
+            returnMsg:function (v,time) {
+                this.$emit("push-msg", {id: this.id, msg: v, time: time});
+            }
+        }
+    };
+    new Vue({
+        el:"#box",
+        data: {
+            inputValue: 80,
+            speeds: [100, 200, 50],
+            componentList: [{
+                name: "进度",
+                jindu: 80,
+                speed: 100
+            }, {
+                name: "进度",
+                jindu: 50,
+                speed: 110
+            }, {
+                name: "进度",
+                jindu: 70,
+                speed: 120
+            }, {
+                name: "进度",
+                jindu: 80,
+                speed: 105
+            }, {
+                name: "进度",
+                jindu: 50,
+                speed: 115
+            }, {
+                name: "进度",
+                jindu: 70,
+                speed: 125
+            }, {
+                name: "进度",
+                jindu: 80,
+                speed: 95
+            }, {
+                name: "进度",
+                jindu: 50,
+                speed: 90
+            }, {
+                name: "进度",
+                jindu: 70,
+                speed: 130
+            }, {
+                name: "进度",
+                jindu: 80,
+                speed: 150
+            }, {
+                name: "进度",
+                jindu: 50,
+                speed: 160
+            }, {
+                name: "进度",
+                jindu: 70,
+                speed: 170
+            }],
+            consoloMsgList: [],
+            successCount: 0,
+            info:""
+        },
+        components:{
+            myProgress
+        },
+        methods:{
+            setMsg:function (data) {
+                this.successCount++;
+                this.consoloMsgList.push(data.msg);
+                this.componentList[data.id].time=data.time;
+                if (this.componentList.length == this.successCount) {
+                    alert("所有进度组件已经执行完成");
+                    var minIndex=0;
+                    this.componentList.forEach((item,index) => {
+                        if (item["time"] < this.componentList[minIndex].time) {
+                            minIndex = index;
+                        }
+                    });
+                    this.info = "<span style='background-color: #48c876'>第" + (minIndex + 1) + "个进度条用时最短</span>";
+                }
+            }
+        }
+    });
+</script>
