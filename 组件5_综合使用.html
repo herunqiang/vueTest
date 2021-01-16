@@ -14,7 +14,9 @@
 <body>
     <div id = "box">
         <input  v-model.number="inputValue" placeholder="请输入完成进度">
-        <my-progress v-for="(item,index) in componentList" :key="index" :id="index" :value="item.jindu" :speed="item.speed" :componentname="item.name+(index+1)" @push-msg="setMsg"></my-progress>
+        <my-progress v-for="(item,index) in componentList" :key="index" :id="index" :value="item.jindu" :speed="item.speed" :componentname="item.name+(index+1)" @push-msg="setMsg"
+            v-on:mouseover="viewValue(item.jindu)"
+        ></my-progress>
 
         <h4>控制台消息</h4>
         <span v-html="info"></span>
@@ -150,6 +152,9 @@
                     });
                     this.info = "<span style='background-color: #48c876'>第" + (minIndex + 1) + "个进度条用时最短</span>";
                 }
+            },
+            viewValue:function () {
+
             }
         }
     });
