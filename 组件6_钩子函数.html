@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>钩子函数的使用</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <input ref="age" v-model="age"><span v-html="count"></span>
+        <button v-on:click="del">卸载</button>
+    </div>
+</body>
+</html>
+<script>
+   var vm =  new Vue({
+        el: "#box",
+        data: {
+            name: "HRQ",
+            age:0,
+            count:0
+        },
+        beforeCreate() {//改钩子函数执行于实例初始化之后，数据观测和事件配置之前
+            //不能获取数据和方法
+            alert("beforeCreate:数据获取》》"+this.name);
+           // this.viewName();
+        },
+        created() {//实例创建完成后立即执行，可以访问数据，属性，方法
+            alert("created:数据获取》》"+this.name);
+            this.viewName();
+        },
+        beforeMount() {//在挂在之前调用，虚拟dom已经存在，编译模板已经结束，不能获取dom节点，可以拿到数据。还没有渲染。
+            this.timer = setInterval(()=>{
+                this.count++;
+            },1000);
+        },
+        mounted() {//挂载到节点之后执行。这个时候可以进行以上操作，如果修改数据会触发重新渲染
+            this.$refs.age.focus();
+        },
+        beforeUpdate() {
+            //alert("更新之前");
+        },
+       updated() {
+           //alert("更新之后");
+       },
+       beforeDestroy() {
+           clearInterval(this.timer);
+       },
+        methods:{
+            viewName: function () {
+                alert("viewName"+this.name);
+            },
+            del:function () {
+                this.$destroy();
+            }
+        }
+    });
+
+</script>
