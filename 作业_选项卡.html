@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选项卡的实现</title>
+    <script src="js/vue.js"></script>
+    <style>
+        .active{
+            background-color: #ff9c47;
+        }
+        .title{
+            margin-left: 20px;
+        }
+        .content{
+            background-color: #cce3ea;
+        }
+        .center {
+            text-align: center;
+            margin: 0 auto;
+        }
+        .tab{
+            background-color: #ffde6f;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div class="center" style="background-color: #93a8bc" >
+            <span v-for="(item,index) in dataInfo" :class="{active:curIndex==index,title:true}" @click="changTab(index)">{{item.title}}</span>
+        </div>
+        <keep-alive>
+            <component :is="components[curIndex]"  :info="dataInfo[curIndex]" @submit="receiveData"></component>
+        </keep-alive>
+        <!--录入数据展示-->
+        <view-component :data="viewDataInfo"></view-component>
+    </div>
+</body>
+</html>
+<script>
+    //数据展示组件
+    var viewComponent={
+        props: ["data"],
+        computed: {
+
+        },
+        template:`<div>
+                        <table border="1">
+                            <tr v-for="(item,index) in data ">
+                                <td v-for="(value,key,j) in item" v-bind:key="key"><span class="tab" v-html="key+':'"></span>{{value}}</td>
+                            </tr>
+                        </table>
+                 </div>`
+    }
+    new Vue({
+        el: "#box",
+        data:{
+            curIndex:0,
+            components: [
+                //子组件一
+                {
+                    props: ["info"],
+                    data(){
+                        return {
+                            corpName:""
+                        }
+                    },
+                    methods: {
+                        submit: function () {
+                            this.$emit("submit", {title:this.info.title,corpName:this.corpName});
+                        }
+                    },
+                    template: `
+                        <div class="content center" >
+                            <h3>{{info.title}}录入</h3>
+                            <table class="center">
+                                <tr>
+                                    <td>公司全称</td>
+                                    <td><input v-model="corpName"></td>
+                                </tr>
+                                <tr >
+                                    <td colspan="2"><button @click="submit">提交</button></td>
+                                </tr>
+
+                            </table>
+                        </div>`
+                },
+                //子组件2
+                {
+                    props: ["info"],
+                    data(){
+                        return {
+                            corpName:"",
+                            corpType:""
+                        }
+                    },
+                    methods: {
+                        submit: function () {
+                            this.$emit("submit", {title:this.info.title,corpName:this.corpName,corpType:this.corpType});
+                        }
+                    },
+                    template: `
+                        <div class="content center">
+                            <h3>{{info.title}}录入</h3>
+                            <table class="center">
+                                <tr>
+                                    <td>公司全称</td>
+                                    <td><input v-model="corpName"></td>
+                                </tr>
+                                <tr>
+                                    <td>公司性质</td>
+                                    <td><input v-model="corpType"></td>
+                                </tr>
+                                <tr >
+                                    <td colspan="2"><button @click="submit">提交</button></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    `
+                }
+            ],
+            dataInfo:[
+                {title:"广州越秀集团",},
+                {title:"广州立白集团"}
+            ],
+            viewDataInfo:[]
+        },
+        components: {
+            viewComponent
+        },
+        methods:{
+            changTab:function(index){
+                this.curIndex = index;
+            },
+            receiveData: function (data) {
+                this.viewDataInfo.push(data);
+            }
+        }
+    });
+</script>
