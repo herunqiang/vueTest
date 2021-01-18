@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>监控数据变化</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <input type="range" min="0" max="255" v-model="r"><br>
+        <input type="range" min="0" max="255" v-model="g"><br>
+        <input type="range" min="0" max="255" v-model="b"><br>
+        <h1>颜色展示区</h1>
+        <div v-bind:style="{background:color}">
+            sss
+        </div>
+        <h1>监控对象的变化</h1>
+        姓名：<input v-model="people.name"><span v-text="people.oldName"></span><br>
+        年龄：<input v-model="people.age"><span v-text="people.oldAge"></span><br>
+        <h2>对象展示区</h2>
+
+    </div>
+</body>
+</html>
+<script>
+    new Vue({
+        el: "#box",
+        data:{
+            r:0,
+            g:0,
+            b:0,
+            color: "",
+            people:{name:"",oldName:"",age: 0,oldAge:0}
+        },
+        created() {
+            this.color = `rgb(${this.r},${this.g},${this.b})`;
+        },
+        watch: {
+            r(newValue, oldValue) {
+                console.log(oldValue);
+                this.color = `rgb(${newValue},${this.g},${this.b})`;
+            },
+            g(newValue, oldValue) {
+                console.log(oldValue);
+                this.color = `rgb(${this.a},${newValue},${this.b})`;
+            },
+            b(newValue, oldValue) {
+                console.log(oldValue);
+                this.color = `rgb(${this.a},${this.g},${newValue})`;
+            },
+            "people.name": function(n,o) {
+
+                this.people.oldName = o;
+
+            },
+            "people.age": function(n,o) {
+
+                this.people.oldAge = o;
+            }
+        }
+    })
+</script>
