@@ -12,7 +12,9 @@
             <template v-slot:view-msg>
                 <span>提示：输入信息不能为空</span>
             </template>
-
+            <template v-slot:btn="props">
+                <button @click="pushInput(props.input)">保存</button>
+            </template>
 
         </entry-component>
         <!--数据展示区-->
@@ -43,7 +45,7 @@
         template:`<div>
                     <slot name="view-msg" :inputInfo="input"></slot>
                     <input v-model="input" @keyup.enter="add(input)" ref="input">
-                    <slot name="doSubmit"></slot>
+                    <slot name="btn" :input="input"></slot>
                   </div>`
 
     }
