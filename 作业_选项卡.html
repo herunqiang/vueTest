@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>选项卡的实现</title>
     <script src="js/vue.js"></script>
+    <!--api:https://animate.style/-->
+    <link href="https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.compat.css" rel="stylesheet">
     <style>
         .active{
             background-color: #ff9c47;
@@ -21,6 +23,9 @@
         .tab{
             background-color: #ffde6f;
         }
+        /*过渡效果切换*/
+
+
     </style>
 </head>
 <body>
@@ -28,9 +33,11 @@
         <div class="center" style="background-color: #93a8bc" >
             <span v-for="(item,index) in dataInfo" :class="{active:curIndex==index,title:true}" @click="changTab(index)">{{item.title}}</span>
         </div>
-        <keep-alive>
-            <component :is="components[curIndex]"  :info="dataInfo[curIndex]" @submit="receiveData"></component>
-        </keep-alive>
+        <transition mode="out-in"  enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
+            <keep-alive>
+                <component :is="components[curIndex]"  :info="dataInfo[curIndex]" @submit="receiveData"></component>
+            </keep-alive>
+        </transition>
         <!--录入数据展示-->
         <view-component :data="viewDataInfo"></view-component>
     </div>
