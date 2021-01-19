@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>插槽的简单使用</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <com>
+            <template v-slot:before="props">
+                组件返回值：{{props.beforeMsg}}
+            </template>
+            <template v-slot:after="props">
+                组件返回值：{{props.afterMsg}}
+            </template>
+        </com>
+    </div>
+</body>
+</html>
+<script>
+    var com = {
+        template:`<div>
+                        <slot name="before" :beforeMsg="msg" ></slot><br>
+                        插槽的简单使用<br>
+                        <slot name="after" :afterMsg="successMsg" ></slot><br>
+                  </div>`,
+        data() {
+            return {
+                msg:"HRQ",
+                successMsg:"aha"
+            }
+        }
+    }
+    new Vue({
+        el: "#box",
+        components:{
+            com
+        }
+    })
+</script>
