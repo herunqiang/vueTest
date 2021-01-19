@@ -69,6 +69,12 @@
                             this.$emit("submit", {title:this.info.title,corpName:this.corpName});
                         }
                     },
+                    activated() {//激活时触发
+                        console.log(this.info.title)
+                    },
+                    deactivated() {//停用时触发
+                        console.log(`${this.info.title}已停用`)
+                    },
                     template: `
                         <div class="content center" >
                             <h3>{{info.title}}录入</h3>
@@ -97,6 +103,12 @@
                         submit: function () {
                             this.$emit("submit", {title:this.info.title,corpName:this.corpName,corpType:this.corpType});
                         }
+                    },
+                    activated() {//激活时触发
+                        console.log(this.info.title)
+                    },
+                    deactivated() {
+                        console.log(`${this.info.title}已停用`)
                     },
                     template: `
                         <div class="content center">
