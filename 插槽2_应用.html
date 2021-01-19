@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>插槽的应用</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <!--数据录入区-->
+        <entry-component :add="pushInput" ref="entry">
+            <template v-slot:view-msg>
+                <span>提示：输入信息不能为空</span>
+            </template>
+
+
+        </entry-component>
+        <!--数据展示区-->
+        <view-component :input-arr="inputArr"></view-component>
+    </div>
+
+</body>
+</html>
+<script>
+    var entryComponent = {
+        props: ["add"],
+        data() {
+            return {
+                input:""
+            }
+        },
+        mounted() {
+            this.$refs.input.focus();
+        },
+        methods:{
+            submit:function(){//向父组件传值
+                this.$emit("recive-event",{input:this.input})
+            },
+            test:function () {
+                alert("jsifjsif");
+            }
+        },
+        template:`<div>
+                    <slot name="view-msg" :inputInfo="input"></slot>
+                    <input v-model="input" @keyup.enter="add(input)" ref="input">
+                    <slot name="doSubmit"></slot>
+                  </div>`
+
+    }
+    var viewComponent={
+        props:["input-arr"],
+        template: `<div>
+                        <ul>
+                            <li v-for="(item,index) in inputArr">{{index+1}}.{{item}}</li>
+                        </ul>
+                   </div>`
+    }
+    new Vue({
+        el:"#box",
+        data: {
+            inputArr:[]
+        },
+        components:{
+            entryComponent,viewComponent
+        },
+        methods:{
+            pushInput: function (input) {
+                this.inputArr.push(input);
+                //注意：
+                this.$refs.entry.input = "";
+                //this.$refs.entry.test();
+            }
+        }
+    })
+
+</script>
