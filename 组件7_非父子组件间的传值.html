@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>非父子组件间的传值</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <first-brother></first-brother>
+        <second-brother></second-brother>
+    </div>
+</body>
+</html>
+<script>
+    //用户非父子组件间的传值
+    var vueBus = new Vue();
+    var firstBrother ={
+        template:`
+                    <div>
+                        <input v-model.number="number" >
+                        <button @click="sendNumber">传值给兄弟组件</button>
+                    </div>`,
+        data() {
+            return {
+                number:0
+            };
+        },
+        methods:{
+            sendNumber(){
+                vueBus.$emit("number-event", this.number);
+            }
+        }
+    }
+    var secondBrother ={
+        template:`
+                    <div>
+                        <h3>{{number}}</h3>
+                    </div>`,
+        data() {
+            return {
+                number:0
+            };
+        },
+        created() {
+            vueBus.$on("number-event",(number)=>{
+                this.number = number;
+            })
+        }
+    }
+    new Vue({
+        el: "#box",
+        components:{
+            firstBrother,
+            secondBrother
+        }
+    })
+</script>
